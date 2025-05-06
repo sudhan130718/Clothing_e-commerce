@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>StyleCo.</title>
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Top Layer -->
+  <div class="top-bar">
+    S A L E : U P T O 7 0 % O F F *
+  </div>
+
+  <!-- Middle Layer -->
+  <div class="middle-bar">
+    <div class="brand">StyleCo.</div>
+    <div class="search-container">
+      <form class="search-box">
+        <input type="text" placeholder="Search products">
+        <button type="submit"><a href="#"><img src="{% static 'images/search icon.png' %}" alt="search"></a></button>
+      </form>
+    </div>
+    <div class="icons">
+        <a href="{% url 'view_cart' %}"><img src="{% static 'images/cart.png' %}" alt="Cart"></a>
+
+        <a href="#"><img src="{% static 'images/heart icon.png' %}" alt="Wishlist"></a>
+        
+
+        {% if user.is_authenticated %}
+        <a class="logout" href="{% url 'logout' %}">Logout</a>
+        <a class="welcome-message">Welcome, {{ user.username }}!</a>
+      {% else %}
+      <a href="{% url 'login' %}"><img src="{% static 'images/user icon.png' %}" alt="Login"></a>
+      {% endif %}
+      </div>
+  </div>
+
+  <!-- Bottom Layer -->
+  <div class="bottom-nav">
+    <a href="{% url 'home' %}">Home</a>
+    <div class="dropdown">
+      <a href="{% url 'category_page' %}">Categories</a>
+      <div class="dropdown-content">
+        {% for category in categories %}
+        <a href="{% url 'products_by_category' category.slug %}">{{ category.name }}</a>
+       
+        {% endfor %}
+ 
+      </div>
+    </div>
+    <a href="#">Sale</a>
+    <a href="#">About Us</a>
+  </div>
+
+ 
+  
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <!-- Column 1 -->
+      <div class="footer-col">
+        <h3>NAVIGATE</h3>
+        <ul>
+          <li><a href="#">Replacements, Returns & Refunds</a></li>
+          <li><a href="#">News & Promotions</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">How to order</a></li>
+        </ul>
+      </div>
+  
+      <!-- Column 2 -->
+      <div class="footer-col">
+        <h3>IN-STORE SHOPPING</h3>
+        <p>House of StyleCo.<br>
+        South Fairlands,<br>
+        Salem - 636 302</p>
+      </div>
+  
+      <!-- Column 3 -->
+      <div class="footer-col">
+        <h3>StyleCo.</h3>
+        <p>Reg: S1203014054<br>
+        TIN: 109201GST1204<br>
+        Phone: +91 90121 90121<br>
+        Email: styleco@gmail.com</p>
+      </div>
+    </div>
+  
+    <!-- Social Icons -->
+    <div class="footer-social">
+      <a href="#"><img src="{% static 'images/facebook.png' %}" alt="Facebook"></a>
+      <a href="#"><img src="{% static 'images/insta.jpeg' %}" alt="Instagram"></a>
+      <a href="#"><img src="{% static 'images/twitter.png' %}" alt="Twitter"></a>
+    </div>
+  </footer>
+  
+  <script>
+    function changeImage(thumbnail) {
+      document.getElementById('mainImage').src = thumbnail.src;
+    }
+  
+    function updateQty(change) {
+      const qtyInput = document.getElementById('quantity');
+      let qty = parseInt(qtyInput.value);
+      qty = Math.max(1, qty + change);
+      qtyInput.value = qty;
+    }
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const paymentMethodRadios = document.querySelectorAll('input[name="payment_method"]');
+    const cardDetails = document.getElementById('card-details');
+
+    if (paymentMethodRadios && cardDetails) {  // Check if the elements exist
+        paymentMethodRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (document.getElementById('card').checked) {
+                    cardDetails.style.display = 'block';
+                } else {
+                    cardDetails.style.display = 'none';
+                }
+            });
+        });
+    } else {
+        console.error("Required elements not found in the DOM.");
+    }
+});
+
+  </script>
+  
+</body>
+</html>

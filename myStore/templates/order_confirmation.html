@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order_confirmation.css' %}">
+{% endblock %}
+{% block content %}
+<div class="order-confirmation-container">
+    <h2>Order Confirmation</h2>
+
+    <div class="order-details">
+        <h3>Order #{{ order.id }}</h3>
+        <p><strong>Order Date:</strong> {{ order.order_date }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Total Amount:</strong> ${{ order.total_amount }}</p>
+
+        <h4>Shipping Address</h4>
+        <p>{{ order.shipping_address }}</p>
+
+        <h4>Payment Method</h4>
+        <p>{{ order.payment_method|capfirst }}</p>
+
+        <h4>Order Items</h4>
+        <ul>
+            {% for item in order_items %}
+                <li>{{ item.product.name }} x {{ item.quantity }} - ${{ item.total_price }}</li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+        <h3>Thank You for Your Order!</h3>
+        <p>We will process your order and send you a confirmation email once your order has been shipped.</p>
+    </div>
+</div>
+{% endblock %}

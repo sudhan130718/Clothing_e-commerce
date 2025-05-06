@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if items %}
+<div class="breadcrumb">
+    <span><a href="{% url 'home' %}">Home</a> > My Cart</span>
+</div>
+
+<div class="step-indicator">
+    <div class="step active">  BAG</div>
+    <div class="step">ADDRESS</div>
+    <div class="step">PAYMENT</div>
+</div>
+
+<div class="cart-container">
+    <div class="cart-left">
+        {% for item in items %}
+        <div class="cart-item">
+            <img src="{{ item.product.variants.first.image.url }}" alt="{{ item.product.name }}">
+            <div class="item-details">
+                <h3>{{ item.product.name }}</h3>
+                <p>Category: {{ item.product.category.name }}</p>
+              
+               
+            </div>
+
+            <div>
+                <p>Price: ₹{{ item.product.variants.first.price }}</p>
+            </div>
+            <div class="quantity-control">
+                <a href="{% url 'update_quantity' item.id 'decrease' %}"><button>-</button></a>
+                <span>{{ item.quantity }}</span>
+                <a href="{% url 'update_quantity' item.id 'increase' %}"><button>+</button></a>
+            </div>
+            <div>
+                <a href="{% url 'remove_item' item.id %}"> <button style=" padding: 8px 14px;">Remove</button></a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="cart-right">
+        <h3>PRICE DETAILS</h3>
+        <hr>
+        <p> <strong>Subtotal:</strong> &nbsp;&nbsp;&nbsp;&nbsp;  ₹{{ cart.total }}</p>
+        <p> <strong>Delivery Charges:</strong>&nbsp;&nbsp;  ₹ 0</p>
+        <p> <strong>Discount:</strong>&nbsp;&nbsp;&nbsp;  ₹ 0</p>
+        <hr>
+        <br>
+        <p><strong>Total: &nbsp;&nbsp;  ₹{{ cart.total }}</strong></p>
+        <hr>
+        <br>
+        <a href="{% url 'checkout' %}"><button class="checkout-btn">Checkout</button></a>
+    </div>
+</div>
+
+{% else %}
+<p>Your cart is empty.</p>
+<br>
+<a href="{% url 'home' %}" class="continue-shopping">← Continue Shopping</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="product-page-container">
+
+  <!-- Filter Sidebar -->
+ 
+  <aside class="filters">
+
+    <form method="get" id="filter-form">
+
+  <!-- Sizes -->
+  <div class="filter-section">
+    <h4>Size</h4>
+    {% for size in sizes %}
+      <label>
+        <input type="checkbox" name="size" value="{{ size }}"
+        {% if size in selected_size %}checked{% endif %}>
+        {{ size }}
+      </label>
+    {% endfor %}
+  </div>
+
+      <!-- Sub-Categories -->
+      <!-- <div class="filter-section">
+        <h4>Sub-Categories</h4>
+        {% for sub in subcategories %}
+          <label>
+            <input type="checkbox" name="sub" value="{{ sub.slug }}"
+            {% if sub.slug in selected_subs %}checked{% endif %}>
+            {{ sub.name }}
+          </label>
+        {% endfor %}
+      </div> -->
+
+      <!-- Brands -->
+      <div class="filter-section">
+        <h4>Brand</h4>
+        {% for brand in brands %}
+          <label>
+            <input type="checkbox" name="brand" value="{{ brand.name }}"
+            {% if brand.name in selected_brand %}checked{% endif %}>
+            {{ brand.name }}
+          </label>
+        {% endfor %}
+      </div>
+
+    
+
+      <!-- Price Range -->
+      <!-- <div class="filter-section">
+        <h4>Price</h4>
+        <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}">
+        -
+        <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}">
+      </div> -->
+
+      <!-- Hidden fallback submit for JS-less browsers -->
+      <!-- <noscript><button type="submit">Apply Filters</button></noscript> -->
+    </form>
+  </aside>
+
+  <!-- Product Grid -->
+
+  <section class="product-list-section">
+    <nav class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        {% if category %}
+          &gt; <a href="{% url 'category_page' %}">Categories</a>
+          &gt; <a href="{% url 'products_by_category' category.slug %}">{{ category.name }}</a>
+        {% endif %}
+        {% if subcategory %}
+          &gt; <a href="{% url 'products_by_category' subcategory.slug %}">{{ subcategory.name }}</a>
+        {% endif %}
+        {% if product %}
+          &gt; <span>{{ product.name }}</span>
+        {% endif %}
+      </nav>
+    <h2 class="category-title">{{ category.name }}</h2>
+  
+    <div class="product-list">
+    {% for product in page_obj %}
+    <div class="product-card" >
+        <div class="product-img-container">
+            <a href="{% url 'product_detail' category.slug product.slug %}">
+              {% with product.variants.first as variant %}
+                {% if variant and variant.image %}
+                  <img src="{{ variant.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                  <img src="{% static 'images/sample-product.jpg' %}" alt="No Image Available">
+                {% endif %}
+              {% endwith %}
+            </a>
+          </div>
+          
+      <h4>{{ product.name }}</h4>
+      <p>₹{{ product.variants.first.price }}</p>
+      <a href="{% url 'add_to_cart' product.id %}">
+      <button>Add to Cart</button></a>
+    </div>
+    {% endfor %}
+</div>
+    <!-- Pagination -->
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+      {% endif %}
+
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}">Next &raquo;</a>
+      {% endif %}
+    </div>
+
+  </section>
+
+</div>
+
+<!-- Auto-submit JS -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById("filter-form");
+    form.querySelectorAll("input").forEach(input => {
+      input.addEventListener("change", () => {
+        form.submit();
+      });
+    });
+  });
+</script>
+
+{% endblock %}

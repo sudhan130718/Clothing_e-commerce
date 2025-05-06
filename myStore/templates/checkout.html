@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Custom Checkout CSS -->
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="checkout-container">
+    <div class="breadcrumb">
+        <span><a href="{% url 'home' %}">Home</a> > <strong>Checkout</strong> </span>
+    </div>
+    
+    <div class="step-indicator">
+        <div class="step "><a href="{% url 'view_cart' %}">Cart  </a>  </div>
+        <div class="step  active">ADDRESS & PAYMENT</div>
+    </div>
+
+    <form method="POST" class="checkout-form">
+        {% csrf_token %}
+        <div class="checkout-grid">
+            <!-- Billing Details -->
+            <div class="billing-details">
+                <h3>Contact Address</h3>
+
+                <div class="input-group">
+                    <label for="full_name">Full Name</label>
+                    {{ form.full_name }}
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    {{ form.phone }}
+                </div>
+
+                <div class="input-group">
+                    <label for="address">Address</label>
+                    {{ form.address }}
+                </div>
+
+                <div class="input-group">
+                    <label for="apartment">Apartment (Optional)</label>
+                    {{ form.apartment }}
+                </div>
+
+                <div class="grid-two">
+                    <div class="input-group">
+                        <label for="city">City</label>
+                        {{ form.city }}
+                    </div>
+
+                    <div class="input-group">
+                        <label for="zip_code">Pin Code</label>
+                        {{ form.zip_code }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary (Just a placeholder, customize this part for your site) -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                {% for item in items %}
+                    <div class="summary-item">
+                        <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                        <span>${{ item.total_price }}</span>
+                    </div>
+                {% endfor %}
+                <br>
+                <hr>
+                <div class="summary-item total">
+                    <span>Total</span>
+                    <span>${{ total }}</span>
+                </div>
+                <hr>
+                <br>
+                 <!-- Payment Details -->
+                 <div class="payment-method">
+                    <h3>Payment Method</h3>
+    
+                   
+                 {% for value, label in form.payment_method.field.choices %}
+                    <div class="payment-option">
+                        <input type="radio" id="{{ value }}" name="payment_method" value="{{ value }}" {% if value == form.payment_method.value %}checked{% endif %}>
+                        <label for="{{ value }}"><span>{{ label }}</span></label>
+                    </div>
+                {% endfor %}
+                   
+                      
+                   
+    
+                    <div id="card-details" style="display: none;">
+                        <h3>Card Payment Details</h3>
+    
+                        <div class="input-group">
+                            <label for="cardholder_name">Cardholder Name</label>
+                            {{ form.cardholder_name }}
+                        </div>
+    
+                        <div class="input-group">
+                            <label for="card_number">Card Number</label>
+                            {{ form.card_number }}
+                        </div>
+    
+                        <div class="grid-two">
+                            <div class="input-group">
+                                <label for="expiry_date">Expiry Date</label>
+                                {{ form.expiry_date }}
+                            </div>
+    
+                            <div class="input-group">
+                                <label for="cvv">CVV</label>
+                                {{ form.cvv }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="checkout-btn">Place Order</button>
+
+            </div>
+            </div>
+
+           
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+
+

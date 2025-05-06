@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+{% endblock %}
+{% block title %}Home - StyleCo.{% endblock %}
+
+{% block content %}
+<div class="home-banner">
+    <div class="banner-text">
+      <h2>REFLECT YOUR STYLE</h2>
+    </div>
+    <div class="banner-images">
+      <div class="img-large">
+        <img src="{% static 'images/register header image 1.png' %}" alt="Style Image 1">
+      </div>
+      <div class="img-small">
+        <img src="{% static 'images/reg-header image 2.png' %}" alt="Style Image 2">
+      </div>
+      <div class="img-small">
+        <img src="{% static 'images/reg-header image 3.png' %}" alt="Style Image 3">
+      </div>
+    </div>
+  </div>
+  
+  <div class="brand-logos">
+      <img src="{% static 'images/levis.png' %}" alt="Brand 1">
+      <img src="{% static 'images/valentina logo.png' %}" alt="Brand 2">
+      <img src="{% static 'images/gucci logo.png' %}" alt="Brand 3">
+      <img src="{% static 'images/gucci logo.png' %}" alt="Brand 4">
+      <img src="{% static 'images/fendi logo.png' %}" alt="Brand 5">
+      <img src="{% static 'images/adidas logo.png' %}" alt="Brand 6">
+      <img src="{% static 'images/d&g logo.png' %}" alt="Brand 7">
+  
+    </div>
+    <div class="explore-section">
+      <div class="explore-row">
+        <!-- Full-width image (left) -->
+        <div class="explore-image-top">
+          <img src="{% static 'images/reg-image 4.png' %}" alt="Explore Fashion">
+        </div>
+    
+        <!-- Content (middle) -->
+        <div class="explore-text">
+          <h2>
+            EXPLORE TODAY’S<br>FASHION THAT MIRRORS<br>YOUR PERSONALITY,<br>
+            ELEVATING YOUR CONFIDENCE,<br>EMBRACE STYLES, &<br>INDIVIDUALITY.
+          </h2>
+        </div>
+    
+        <!-- Buttons + Small Image (right) -->
+        <div class="explore-buttons-section">
+          <button>Explore Now</button>
+          <div class="explore-image-bottom">
+            <img src="{% static 'images/hanger.jpeg' %}" alt="Explore Detail">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+    <div class="collection-section">
+      <!-- Header -->
+      <h2 class="collection-title">OUR COLLECTION</h2>
+      <p class="collection-description">
+        Step into the world of StyleCo., where each collection tells its own story. From minimalist 
+        essentials to bold statement pieces, our curated collections are designed to suit every 
+        occasion and style.
+      </p>
+    
+      <!-- Category Buttons -->
+      <div class="collection-buttons">
+        <button class="active">Kurtas</button>
+        <button>Winter Wear</button>
+        <button>Dresses</button>
+        <button>Baby Onesies</button>
+        <button>Skirt</button>
+        <button>T-Shirt</button>
+        <a href="#" class="see-all">See All</a>
+      </div>
+    
+      <!-- Product Images -->
+      <div class="collection-images">
+        <img src="{% static 'images/reg kurta 1.png' %}" alt="Collection 1">
+        <img src="{% static 'images/reg kurta 2.png' %}" alt="Collection 2">
+        <img src="{% static 'images/reg kurta  3.png' %}" alt="Collection 3">
+        <img src="{% static 'images/reg kurta 4.png' %}" alt="Collection 4">
+      </div>
+    </div>
+    
+    
+  
+    <div class="email-banner">
+      <img src="{% static 'images/slide-07.jpg' %}" alt="Banner" class="banner-img">
+    
+      <!-- Overlay form -->
+      <div class="email-overlay">
+        <form class="email-form">
+          <input type="email" placeholder="Enter your Email address here" required>
+          <button type="submit">→</button>
+        </form>
+      </div>
+    </div>
+    
+{% endblock %}

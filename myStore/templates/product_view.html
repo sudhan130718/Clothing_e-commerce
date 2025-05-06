@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product_view.css' %}">
+
+{% endblock %}
+{% block content %}
+<section class="product-view-container">
+  
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        {% if category %}
+          &gt; <a href="{% url 'category_page' %}">Categories</a>
+          &gt; <a href="{% url 'products_by_category' category.slug %}">{{ category.name }}</a>
+        {% endif %}
+        {% if subcategory %}
+          &gt; <a href="{% url 'products_by_category' subcategory.slug %}">{{ subcategory.name }}</a>
+        {% endif %}
+        {% if product %}
+          &gt; <span>{{ product.name }}</span>
+        {% endif %}
+      </nav>
+  
+    <!-- Product Content -->
+    <div class="product-view">
+      
+      <!-- Left: Product Images -->
+      <div class="product-images">
+        <img id="mainImage" src="{{ product.variants.first.image.url }}" class="main-image" alt="{{ product.name }}">
+       
+        <div class="thumbnails">
+          {% for variant in product.variants.all|slice:":3" %}
+            <img src="{{ variant.image.url }}" onclick="changeImage(this)" alt="Thumbnail">
+          {% endfor %}
+        </div>
+      </div>
+  
+      <!-- Right: Product Info -->
+      <div class="product-info">
+        <h2>{{ product.name }}</h2>
+        
+        <hr>
+        <p><strong>Category:</strong> {{ category.name }}</p>
+        <p><strong>Price:</strong> ₹{{ product.variants.first.price }}</p>
+      <h3>  TAX INCLUDED | SHIPPING CALCULATED AT CHECKOUT </h3><br>
+   <!-- size -->
+        <label for="size"><strong>Size:</strong></label>
+        <select id="size" name="size">
+          {% for size in sizes %}
+            <option value="{{ size }}" {% if size == selected_size %}selected{% endif %}>{{ size }}</option>
+          {% endfor %}
+        </select>
+        <!-- Quantity -->
+        <div class="quantity-control">
+            <label for="quantity"><strong>quantity:</strong></label>
+          <button onclick="updateQty(-1)">-</button>
+          <input type="number" id="quantity" value="1" min="1">
+          <button onclick="updateQty(1)">+</button>
+
+          
+        </div>
+  
+        <!-- Buttons -->
+        <div class="action-buttons">
+            <a href="{% url 'add_to_cart' product.id %}">
+          <button class="add-cart">Add to Cart</button></a>
+          <button class="buy-now">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <nav class="product-nav">
+    <ul>
+      <li>DESCRIPTION</li>
+      <li>SHIPPING & RETURN</li>
+    </ul>
+  </nav>
+  <hr>
+  <div class="product-details-container">
+    <h2 class="product-title">Paperbag jeans</h2>
+    <p class="product-ref">REF. 87001063</p>
+  
+    <div class="product-description">
+      <p>Denim style cotton fabric. Straight design. Elastic paperbag waistband. Jeans with tie 
+      closure. The ecru colour has a total look.</p>
+    </div>
+  
+    <div class="product-meta">
+      <p><strong>Composition:</strong> 100% cotton</p>
+      <p><strong>Designed in:</strong> Barcelona</p>
+    </div>
+  
+    <div class="product-care">
+      <p><strong>Care Instructions:</strong></p>
+      <ul>
+        <li>Machine wash max 30°C / 85°F short spin dry</li>
+        <li>Do not bleach</li>
+        <li>Iron max 110°C / 230°F</li>
+        <li>Do not dry clean</li>
+        <li>Do not tumble dry</li>
+      </ul>
+    </div>
+  </div>
+  
+  {% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+
+  
+
+  <div class="form-container">
+    <h2>Login</h2>
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+      
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Link to signup page -->
+    <p style="text-align:center; margin-top: 15px;">
+        New user? <a href="{% url 'signup' %}" style="color: #0072ff;">Create an account</a>
+    </p>
+</div>
+
+</body>
+</html>
