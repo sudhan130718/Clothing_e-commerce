@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap');
 
 :root {
   --navy: #071937;
@@ -15,7 +16,7 @@
 }
 
 body {
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Urbanist';
   background-color: var(--soft-blue);
 }
 
@@ -250,8 +251,8 @@ display: inline-block;
 }
 
 .footer-social img {
-width: 28px;
-height: 28px;
+width: 20px;
+height: 20px;
 transition: transform 0.2s;
 }
 

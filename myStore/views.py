@@ -9,9 +9,10 @@ from django.contrib.auth import logout
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Category, Order, OrderItem,Product,Brand,ProductVariant,Cart, CartItem
+from .models import Category, Order, OrderItem,Product,Brand,ProductVariant,Cart, CartItem, Wishlist
 
-
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 from .forms import SignupForm,CheckoutForm
 
@@ -63,15 +64,66 @@ def category_page(request):
     return render(request, 'category.html', {'categories': categories})
 
 
+def all_products(request):
+    categories = Category.objects.filter(parent__isnull=True).order_by('position')
+    products = Product.objects.prefetch_related('variants').all()
 
-from django.core.paginator import Paginator
-from django.db.models import Q
+    
+
+
+ 
+
+
+     # Get filters from query params
+    selected_gender = request.GET.getlist('gender')
+    selected_brand = request.GET.getlist('brand')
+    selected_size = request.GET.getlist('size')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+       
+ # Get all brands and sizes
+    brands = Brand.objects.all()
+    sizes = ProductVariant.objects.values_list('size', flat=True).distinct()
+
+    search_query = request.GET.get('searchProduct', '').strip()
+    print("search_query:", search_query)
+
+    if search_query:
+     products = products.filter(name__icontains=search_query)
+     for p in products:
+      print(p.name)
+      print("products:", products)
+
+    if selected_gender:
+     products = products.filter(category__slug__in=selected_gender)
+
+    if selected_brand:
+        products = products.filter(brand__name__in=selected_brand)
+
+    if selected_size:
+        products = products.filter(variants__size__in=selected_size).distinct()
+
+    if min_price and max_price:
+        products = products.filter(variants__price__gte=min_price, variants__price__lte=max_price).distinct()
+
+
+    return render(request, 'all_products.html', {
+        'categories': categories,
+        'products': products,
+         'brands': brands,
+        'sizes': sizes,
+        'selected_gender':selected_gender,
+        'selected_brand': selected_brand,
+        'selected_size': selected_size,
+    })
+
 
 def products_by_category(request, slug):
     category = get_object_or_404(Category, slug=slug)
     subcategories = category.subcategories.all()
     category_ids = [category.id] + [sub.id for sub in subcategories]
     categories = Category.objects.filter(parent__isnull=True).order_by('position')
+
     # Get filters from query params
     selected_brand = request.GET.getlist('brand')
     selected_size = request.GET.getlist('size')
@@ -90,10 +142,8 @@ def products_by_category(request, slug):
         products = products.filter(variants__price__gte=min_price, variants__price__lte=max_price).distinct()
 
     paginator = Paginator(products, 10)
-    print(f"Product: {paginator }")
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    print(f"Product: {page_obj }")
 
     # Get all brands and sizes
     brands = Brand.objects.all()
@@ -243,3 +293,21 @@ def order_confirmation(request, order_id):
         'order': order,
         'order_items': order_items
     })
+
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    Wishlist.objects.get_or_create(user=request.user, product=product)
+    return redirect(request.META.get('HTTP_REFERER', 'all_products'))  # Redirect to previous page
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    Wishlist.objects.filter(user=request.user, product=product).delete()
+    return redirect(request.META.get('HTTP_REFERER', 'all_products'))
+
+@login_required
+def wishlist_view(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
+    return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})

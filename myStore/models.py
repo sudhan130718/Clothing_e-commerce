@@ -63,6 +63,9 @@ class ProductVariant(models.Model):
     image = models.ImageField(upload_to='products/variants/')
     def __str__(self):
         return f"{self.product.name} - {self.color} - {self.size}"
+    
+
+    
 
 # cart model
 
@@ -124,3 +127,17 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product_variant} x {self.quantity}"
+
+
+# Wishlist
+    
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')  # Prevent duplicate wishlist entries
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"

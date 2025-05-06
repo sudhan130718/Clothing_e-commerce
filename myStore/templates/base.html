@@ -19,15 +19,17 @@
   <div class="middle-bar">
     <div class="brand">StyleCo.</div>
     <div class="search-container">
-      <form class="search-box">
-        <input type="text" placeholder="Search products">
-        <button type="submit"><a href="#"><img src="{% static 'images/search icon.png' %}" alt="search"></a></button>
+      
+      <form class="search-box" method="get" action="{% url 'all_products' %}" id="global-search-form">
+        <input type="text" name="searchProduct" placeholder="Search for products..." value="{{ request.GET.searchProduct }}">
+        <button type="submit"><a><img src="{% static 'images/search icon.png' %}" alt="search"></a></button>
       </form>
+      
     </div>
     <div class="icons">
         <a href="{% url 'view_cart' %}"><img src="{% static 'images/cart.png' %}" alt="Cart"></a>
 
-        <a href="#"><img src="{% static 'images/heart icon.png' %}" alt="Wishlist"></a>
+        <a href="{% url 'wishlist' %}"><img src="{% static 'images/heart icon.png' %}" alt="Wishlist"></a>
         
 
         {% if user.is_authenticated %}
@@ -52,7 +54,7 @@
  
       </div>
     </div>
-    <a href="#">Products</a>
+    <a href="{% url 'all_products' %}">Products</a>
     <a href="#">Sale</a>
     <a href="#">About Us</a>
   </div>

@@ -6,7 +6,7 @@
   }
 
   .filters {
-    flex: 1 1 150px;
+    flex: 1 1 300px;
     background-color: var(--white);
     padding: 20px;
     border-radius: 10px;
@@ -55,13 +55,13 @@
   .product-card:hover {
     transform: scale(1.02);
   }
-  .product-card h4,p,a{
+.product-card h4,p,a{
     margin-bottom: 10px;
 }
 .product-card button{
-  background-color: var(--soft-blue);
-  color: var(--black);
-  padding: 5px;
+    background-color: var(--soft-blue);
+    color: var(--black);
+    padding: 5px;
     border-radius: 5px;
 } 
 .product-card button:hover{
@@ -126,4 +126,32 @@
   .breadcrumb a:hover {
     text-decoration: underline;
   }
+
+  .product-img-container {
+    position: relative; /* Add this */
+  }
+  .wishlist-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+  }
+  
+  .wishlist-icon img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s ease;
+  }
+  
+  .wishlist-icon:hover img {
+    transform: scale(1.1);
+  }
+  
+  /* Selected state (you can toggle this with JS or a template condition) */
+  .wishlist-selected img {
+    color: red;
+  }
+  
   
