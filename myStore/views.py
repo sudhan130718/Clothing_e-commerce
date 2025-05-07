@@ -106,6 +106,12 @@ def all_products(request):
     if min_price and max_price:
         products = products.filter(variants__price__gte=min_price, variants__price__lte=max_price).distinct()
 
+# Get wishlist items for logged-in user
+  
+    wishlist_product_ids = []
+    if request.user.is_authenticated:
+         wishlist_product_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+
 
     return render(request, 'all_products.html', {
         'categories': categories,
@@ -115,6 +121,7 @@ def all_products(request):
         'selected_gender':selected_gender,
         'selected_brand': selected_brand,
         'selected_size': selected_size,
+         'wishlist_product_ids': wishlist_product_ids,
     })
 
 
@@ -149,6 +156,13 @@ def products_by_category(request, slug):
     brands = Brand.objects.all()
     sizes = ProductVariant.objects.values_list('size', flat=True).distinct()
 
+    # Get wishlist items for logged-in user
+  
+    wishlist_product_ids = []
+    if request.user.is_authenticated:
+         wishlist_product_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+
+
     return render(request, 'products.html', {
         'category': category,
         'categories': categories,
@@ -158,6 +172,7 @@ def products_by_category(request, slug):
         'page_obj': page_obj,
         'selected_brand': selected_brand,
         'selected_size': selected_size,
+         'wishlist_product_ids': wishlist_product_ids,
     })
 
 
@@ -189,13 +204,29 @@ def product_detail(request, category_slug,  product_slug):
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        size = request.POST.get('size')  # Optional: only if your CartItem model supports it
 
-    if not item_created:
-        item.quantity += 1
-    item.save()
-    return redirect('view_cart')
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+        # Add size as a condition if CartItem tracks different sizes of the same product
+        item, item_created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={'quantity': quantity}
+        )
+
+        if not item_created:
+            item.quantity += quantity  # or replace with = quantity if preferred
+        item.save()
+
+        return redirect('view_cart')
+
+    # Handle GET request (just redirect or error)
+    return redirect('product_detail', category_slug=product.category.slug, product_slug=product.slug)
+
 
 
 @login_required
@@ -284,6 +315,8 @@ def checkout(request):
 def order_confirmation(request, order_id):
     # Get the order based on the order_id
     order = get_object_or_404(Order, id=order_id)
+    categories = Category.objects.filter(parent__isnull=True).order_by('position')
+
 
     # Fetch the order items related to this order
     order_items = order.items.all()
@@ -291,7 +324,8 @@ def order_confirmation(request, order_id):
     # Render the confirmation page
     return render(request, 'order_confirmation.html', {
         'order': order,
-        'order_items': order_items
+        'order_items': order_items,
+        'categories': categories
     })
 
 
@@ -310,4 +344,6 @@ def remove_from_wishlist(request, product_id):
 @login_required
 def wishlist_view(request):
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
-    return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+    categories = Category.objects.filter(parent__isnull=True).order_by('position')
+
+    return render(request, 'wishlist.html', {'wishlist_items': wishlist_items, 'categories': categories})

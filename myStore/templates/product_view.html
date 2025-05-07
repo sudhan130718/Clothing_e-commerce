@@ -44,29 +44,32 @@
         <p><strong>Category:</strong> {{ category.name }}</p>
         <p><strong>Price:</strong> ₹{{ product.variants.first.price }}</p>
       <h3>  TAX INCLUDED | SHIPPING CALCULATED AT CHECKOUT </h3><br>
-   <!-- size -->
+   
+      <form method="POST" action="{% url 'add_to_cart' product.id %}">
+        {% csrf_token %}
+        
+        <!-- Size -->
         <label for="size"><strong>Size:</strong></label>
         <select id="size" name="size">
-          {% for size in sizes %}
+            {% for size in sizes %}
             <option value="{{ size }}" {% if size == selected_size %}selected{% endif %}>{{ size }}</option>
-          {% endfor %}
+            {% endfor %}
         </select>
+    
         <!-- Quantity -->
         <div class="quantity-control">
-            <label for="quantity"><strong>quantity:</strong></label>
-          <button onclick="updateQty(-1)">-</button>
-          <input type="number" id="quantity" value="1" min="1">
-          <button onclick="updateQty(1)">+</button>
-
-          
+            <label for="quantity"><strong>Quantity:</strong></label>
+            <button type="button" onclick="updateQty(-1)">-</button>
+            <input type="number" id="quantity" name="quantity" value="1" min="1">
+            <button type="button" onclick="updateQty(1)">+</button>
         </div>
-  
-        <!-- Buttons -->
+    
+        <!-- Submit -->
         <div class="action-buttons">
-            <a href="{% url 'add_to_cart' product.id %}">
-          <button class="add-cart">Add to Cart</button></a>
-          <button class="buy-now">Buy Now</button>
+            <button type="submit" class="add-cart">Add to Cart</button>
+            <button type="submit" name="buy_now" class="buy-now">Buy Now</button>
         </div>
+    </form>
       </div>
     </div>
   </section>

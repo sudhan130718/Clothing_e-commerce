@@ -83,3 +83,20 @@
     }
   }
   
+
+  .remove-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+  }
+  
+  .remove-icon img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s ease;
+  }
+ 
+ 

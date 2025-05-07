@@ -87,6 +87,17 @@
     {% for product in page_obj %}
     <div class="product-card" >
         <div class="product-img-container">
+          {% if product.id in wishlist_product_ids %}
+          <!-- Already in wishlist -->
+          <a href="{% url 'remove_from_wishlist' product.id %}" class="wishlist-icon" title="Remove from Wishlist">
+              <img src="{% static 'images/heart_red.png' %}" alt="In Wishlist">
+          </a>
+      {% else %}
+          <!-- Not in wishlist -->
+          <a href="{% url 'add_to_wishlist' product.id %}" class="wishlist-icon" title="Add to Wishlist">
+              <img src="{% static 'images/heart icon.png' %}" alt="Add to Wishlist">
+          </a>
+      {% endif %}
             <a href="{% url 'product_detail' category.slug product.slug %}">
               {% with product.variants.first as variant %}
                 {% if variant and variant.image %}

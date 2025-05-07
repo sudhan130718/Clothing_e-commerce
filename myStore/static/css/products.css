@@ -126,4 +126,29 @@
   .breadcrumb a:hover {
     text-decoration: underline;
   }
+  .product-img-container {
+    position: relative; /* Add this */
+  }
+  .wishlist-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+  }
   
+  .wishlist-icon img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s ease;
+  }
+  
+  .wishlist-icon:hover img {
+    transform: scale(1.1);
+  }
+  
+  /* Selected state (you can toggle this with JS or a template condition) */
+  .wishlist-selected img {
+    color: red;
+  }

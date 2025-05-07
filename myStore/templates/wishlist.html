@@ -15,8 +15,10 @@
       {% for item in wishlist_items %}
         <div class="wishlist-card">
           <a href="{% url 'remove_from_wishlist' item.product.id %}" class="remove-icon" title="Remove">
-            ×
+            
+            <img src="{% static 'images/heart_red.png' %}" alt="In Wishlist">
           </a>
+         
           <div class="image-box">
             {% with item.product.variants.first as variant %}
               {% if variant and variant.image %}
